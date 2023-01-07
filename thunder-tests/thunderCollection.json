@@ -1,0 +1,37 @@
+[
+  {
+    "_id": "a2f28225-e26e-43d4-bffe-8e8e9a859bdf",
+    "colName": "Users",
+    "created": "2022-12-12T12:08:11.385Z",
+    "sortNum": 10000,
+    "folders": []
+  },
+  {
+    "_id": "ca090401-24f0-4c1d-804c-18d4b1680ede",
+    "colName": "Comments",
+    "created": "2022-12-17T21:30:25.975Z",
+    "sortNum": 20000,
+    "folders": []
+  },
+  {
+    "_id": "c15ddffa-0f58-4d69-8518-4f804a067cd8",
+    "colName": "Testing",
+    "created": "2022-12-24T16:16:02.824Z",
+    "sortNum": 30000,
+    "folders": []
+  },
+  {
+    "_id": "da8af825-dad6-4e39-9227-ad409a9aba70",
+    "colName": "Blogs",
+    "created": "2023-01-03T10:49:11.707Z",
+    "sortNum": 40000,
+    "folders": []
+  },
+  {
+    "_id": "3e49f591-1a7f-4124-acef-ab41d613ed25",
+    "colName": "Posts",
+    "created": "2023-01-03T10:56:09.681Z",
+    "sortNum": 50000,
+    "folders": []
+  }
+]
