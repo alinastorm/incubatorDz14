@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common"
 import { JwtService } from '@nestjs/jwt';
-import { LoginSuccessView } from "src/auth/authentications/auth.model"
+import { LoginSuccessView } from "src/auth/auths/auth.model"
 import { AccessTokenPayload, RefreshTokenPayload } from "src/auth/tokens/tokens-types"
 
 
 @Injectable()
-export class jwtTokenService {
+export class JwtTokenService {
     
     constructor(
         private jwtService: JwtService

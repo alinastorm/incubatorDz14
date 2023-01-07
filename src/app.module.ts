@@ -19,9 +19,12 @@ import { Post, PostSchema } from './posts/post.model';
 import { CommentsService } from './comments/comments.service';
 import { CommentSchema, Comment } from './comments/comment.model';
 import { CommentIdValidatorPipe } from './_commons/pipes/commentId.validation.pipe';
-import { Auth, AuthSchema } from './auth/authentications/auth.model';
+import { Auth, AuthSchema } from './auth/auths/auth.model';
 import { AppLoggerMiddleware } from './_commons/helpers/logger';
 import { JwtModule } from '@nestjs/jwt'
+import { JwtTokenService } from './_commons/services/jwtToken-service';
+import { DeviceSession, deviceSessionSchema } from './auth/devicesSessions/deviceSession.model';
+import { DeviceSessionsService } from './auth/devicesSessions/deviceSessions.service';
 // import './_commons/utils/mongoose.utils';
 
 @Module({
@@ -34,12 +37,13 @@ import { JwtModule } from '@nestjs/jwt'
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: DeviceSession.name, schema: deviceSessionSchema }]),
   ],
   // imports: [MongooseModule, UserModule],
   controllers: [AppController, UserController, PostsController, CommentsController, BlogsController, TestingController, CommentsController],
   providers: [
     CommentIdValidatorPipe,
-    AppService, CryptoService, UserService, BlogsService, PostsService, CommentsService,
+    AppService, CryptoService, UserService, BlogsService, PostsService, CommentsService, JwtTokenService,DeviceSessionsService
     // { provide: 'CommentIdValidatorPipe', useClass: CommentIdValidatorPipe }
   ],
   // providers: [AppService, UserService,UserSchemaClass],

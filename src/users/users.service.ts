@@ -4,7 +4,7 @@ import { User, UserBd, UserBdDocument, UserInput, userViewDataMapper, UserView, 
 import { CallbackError, FilterQuery, Model, ObjectId } from 'mongoose';
 import { CryptoService } from '../_commons/services/crypto-service';
 import { HTTP_STATUSES, Paginator, PaginatorQueries } from '../_commons/types/types';
-import { Auth, AuthDocument, AuthView } from '../auth/authentications/auth.model';
+import { Auth, AuthDocument, AuthView } from '../auth/auths/auth.model';
 import { setPaginator } from '../_commons/helpers/paginator';
 
 
@@ -20,11 +20,11 @@ export class UserService {
         let filter: FilterQuery<UserBd> = {}
         if (loginOrEmail) {
             filter = { $or: [] }
-             filter.$or.push({ email: { $regex: loginOrEmail, $options: 'i' } })
-             filter.$or.push({ login: { $regex: loginOrEmail, $options: 'i' } })
+            filter.$or.push({ email: { $regex: loginOrEmail, $options: 'i' } })
+            filter.$or.push({ login: { $regex: loginOrEmail, $options: 'i' } })
         }
-        const users = await this.UserModel.find(filter)
-        return users.map(userViewDataMapper)
+        const users = await this.UserModel.find(filter).lean()
+        return users
     }
     async readAllWithPaginator(query: PaginatorUsers): Promise<Paginator<UserView>> {
 
