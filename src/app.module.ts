@@ -25,6 +25,9 @@ import { JwtModule } from '@nestjs/jwt'
 import { JwtTokenService } from './_commons/services/jwtToken-service';
 import { DeviceSession, deviceSessionSchema } from './auth/devicesSessions/deviceSession.model';
 import { DeviceSessionsService } from './auth/devicesSessions/deviceSessions.service';
+import { RecoveryPasswordsService } from './auth/recoveryPassword/recoweryPasswords.service';
+import { RecoweryPassword, passwordRecowerySchema } from './auth/recoveryPassword/recoveryPassword.model';
+import { EmailService } from './_commons/services/email-service';
 // import './_commons/utils/mongoose.utils';
 
 @Module({
@@ -38,12 +41,13 @@ import { DeviceSessionsService } from './auth/devicesSessions/deviceSessions.ser
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: DeviceSession.name, schema: deviceSessionSchema }]),
+    MongooseModule.forFeature([{ name: RecoweryPassword.name, schema: passwordRecowerySchema }]),
   ],
   // imports: [MongooseModule, UserModule],
   controllers: [AppController, UserController, PostsController, CommentsController, BlogsController, TestingController, CommentsController],
   providers: [
     CommentIdValidatorPipe,
-    AppService, CryptoService, UserService, BlogsService, PostsService, CommentsService, JwtTokenService,DeviceSessionsService
+    AppService, CryptoService, UserService, BlogsService, PostsService, CommentsService, JwtTokenService, DeviceSessionsService, RecoveryPasswordsService,EmailService
     // { provide: 'CommentIdValidatorPipe', useClass: CommentIdValidatorPipe }
   ],
   // providers: [AppService, UserService,UserSchemaClass],

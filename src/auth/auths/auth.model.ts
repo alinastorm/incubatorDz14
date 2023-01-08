@@ -39,7 +39,7 @@ export interface MeView {
     login: string
     userId: string
 }
-export type AuthDocument = HydratedDocument<AuthBd>;
+export type AuthBdDocument = HydratedDocument<AuthBd>;
 
 @Schema()
 export class Auth implements Omit<AuthBd, '_id'> {
