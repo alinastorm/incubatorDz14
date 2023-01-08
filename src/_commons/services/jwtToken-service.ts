@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common"
 import { JwtService } from '@nestjs/jwt';
-import { LoginSuccessView } from "src/auth/auths/auth.model"
-import { AccessTokenPayload, RefreshTokenPayload } from "src/auth/tokens/tokens-types"
+import { AccessToken, AccessTokenPayload, RefreshTokenPayload } from "src/authentication/tokens/tokens-types"
+
 
 
 @Injectable()
 export class JwtTokenService {
-    
+
     constructor(
         private jwtService: JwtService
     ) { }
@@ -15,8 +15,7 @@ export class JwtTokenService {
         const seconds = process.env.JWT_ACCESS_LIFE_TIME_SECONDS ?? console.log("No JWT_ACCESS_LIFE_TIME_SECONDS");
         // console.log('******ACCESS expiresIn:', `${seconds}s`);
         const accessToken = this.jwtService.sign(payload, { secret: process.env.JWT_ACCESS_SECRET, expiresIn: `${seconds}s` })
-        const result: LoginSuccessView = { accessToken }
-        return result
+        return accessToken
     }
     generateRefreshToken(payload: RefreshTokenPayload) {
         const seconds = process.env.JWT_REFRESH_LIFE_TIME_SECONDS ?? console.log("JWT_REFRESH_LIFE_TIME_SECONDSS");

@@ -5,17 +5,19 @@ import { JwtTokenService } from "src/_commons/services/jwtToken-service"
 import { HTTP_STATUSES } from "src/_commons/types/types"
 import { Auth } from "../auths/auth.model"
 import { RefreshTokenPayload } from "../tokens/tokens-types"
-import { DeviceSessionBd, DeviceSessionDocument, DeviceSessionView } from "./deviceSession.model"
+import { DeviceSession, DeviceSessionBd, DeviceSessionDocument, DeviceSessionView } from "./deviceSession.model"
 
 @Injectable()
 export class DeviceSessionsService {
 
     constructor(
         private jwtTokenService: JwtTokenService,
-        @InjectModel(Auth.name) private DeviceSessionModel: Model<DeviceSessionDocument>,
+        @InjectModel(DeviceSession.name) private DeviceSessionModel: Model<DeviceSessionDocument>,
 
     ) { }
-
+    async addOne(data: DeviceSession) {
+        return await this.DeviceSessionModel.create(data)
+    }
     async readAll(refreshToken: string) {
 
         const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
@@ -42,7 +44,11 @@ export class DeviceSessionsService {
             })
         )
     }
-    async deleteOne(refreshToken: string) {
+    async deleteOneByDeviceId(deviceId: string) {
+        const result = await this.DeviceSessionModel.deleteOne({ deviceId })
+        return result.deletedCount === 1
+    }
+    async deleteMany(refreshToken: string) {
         const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
         const { userId, deviceId } = user
 
@@ -62,4 +68,7 @@ export class DeviceSessionsService {
         // })
 
     }
+
+
+
 }

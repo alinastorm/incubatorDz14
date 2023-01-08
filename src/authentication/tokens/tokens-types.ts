@@ -1,3 +1,6 @@
+export type AccessToken = string
+export type RefreshToken = string
+
 export interface AccessTokenPayload {
     userId: string
 }

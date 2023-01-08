@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
-import { MaxLength, MinLength, ArrayMinSize, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { MaxLength, MinLength, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class PaginatorUsers {
+export class PaginatorUsersDto {
     @IsOptional() searchLoginTerm: string
     @IsOptional() searchEmailTerm: string
     @IsOptional() @Type(() => Number) pageNumber: number
@@ -15,14 +15,13 @@ export class PaginatorUsers {
 }
 export interface UserInput {
     login: string // maxLength: 10 minLength: 3
-    password: string // maxLength: 20 minLength: 6
     email: string // pattern: ^ [\w -\.] +@([\w -] +\.) +[\w -]{ 2, 4 } $
 }
 export interface UserView {
     id: string
     login: string
     email: string
-    createdAt?: string //	TODO в дз не обязательный в интерфей
+    createdAt: string //	TODO в дз не обязательный в интерфей
 }
 export interface UserBd {
     _id: string
@@ -30,6 +29,11 @@ export interface UserBd {
     email: string
     confirm: boolean //мое
     createdAt?: string //	TODO в дз не обязательный в интерфей
+}
+export interface UserInfo {
+    userId: string
+    login: string
+    email: string
 }
 // export interface UsersSearchPaginationMongoDb {
 //     /**Search term for user Login: Login should contains this term in any position

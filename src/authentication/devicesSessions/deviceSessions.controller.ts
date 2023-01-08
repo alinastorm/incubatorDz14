@@ -1,4 +1,4 @@
-import { Controller, Get, Delete, Post } from "@nestjs/common";
+import { Controller, Get, Delete, Post, Param } from "@nestjs/common";
 import { Cookies } from "src/_commons/decorators/cookies.decorator";
 import { DeviceSessionsService } from "./deviceSessions.service";
 
@@ -24,8 +24,10 @@ export class DevicesSessionsController {
 
     @Delete('devices')
     async deleteOne(
-        @Cookies('refreshToken') refreshToken: string
+        @Param('deviceId') deviceId: string
     ) {
-        return this.deviceSessionsService.deleteOne(refreshToken)
+        return this.deviceSessionsService.deleteOneByDeviceId(deviceId)
     }
+
+
 }

@@ -1,19 +1,17 @@
-import { HttpException, Injectable, BadRequestException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserBd, UserBdDocument, UserInput, userViewDataMapper, UserView, PaginatorUsers } from './user.model';
-import { CallbackError, FilterQuery, Model, ObjectId } from 'mongoose';
-import { CryptoService } from '../_commons/services/crypto-service';
-import { HTTP_STATUSES, Paginator, PaginatorQueries } from '../_commons/types/types';
-import { Auth, AuthDocument, AuthView } from '../auth/auths/auth.model';
-import { setPaginator } from '../_commons/helpers/paginator';
+import { User, UserBd, UserBdDocument, userViewDataMapper, UserView, PaginatorUsersDto, UserInfo, UserInput } from './user.model';
+import { FilterQuery, Model } from 'mongoose';
+import { HTTP_STATUSES, Paginator } from '../../_commons/types/types';
+import { setPaginator } from '../../_commons/helpers/paginator';
+import { JwtTokenService } from 'src/_commons/services/jwtToken-service';
 
 
 @Injectable()
-export class UserService {
+export class UsersService {
     constructor(
         @InjectModel(User.name) private UserModel: Model<UserBdDocument>,
-        @InjectModel(Auth.name) private AuthModel: Model<AuthDocument>,
-        private cryptoService: CryptoService,
+        private jwtTokenService: JwtTokenService,
     ) { }
 
     async readAll(loginOrEmail: string) {
@@ -26,7 +24,7 @@ export class UserService {
         const users = await this.UserModel.find(filter).lean()
         return users
     }
-    async readAllWithPaginator(query: PaginatorUsers): Promise<Paginator<UserView>> {
+    async readAllWithPaginator(query: PaginatorUsersDto): Promise<Paginator<UserView>> {
 
         const { pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = -1, searchLoginTerm, searchEmailTerm } = query
         let filter: FilterQuery<UserBd> = {}
@@ -50,22 +48,35 @@ export class UserService {
         const result = setPaginator(posts, pageNumber, pageSize, count)
         return result
     }
-    async addOne({ email, login, password }: UserInput): Promise<UserView | HttpException> {
+    async addOne(data: UserInput, confirm: boolean): Promise<UserView> {
+        const { email, login } = data
         //проверка уникальный login
         const usersRegistered = await this.UserModel.find({ login }).lean()
         if (usersRegistered.length) throw new HttpException([{ message: "login exist", field: "login" }], HTTP_STATUSES.BAD_REQUEST_400)
 
         const createdAt = new Date().toISOString()
-        const elementUser: User = { email, login, createdAt, confirm: true }
+        const elementUser: User = { email, login, createdAt, confirm }
         const user = await this.UserModel.create(elementUser).then(userViewDataMapper)
-        const userId = user.id
-        const passwordHash = await this.cryptoService.generatePasswordHash(password)
-        const elementAuth: Omit<AuthView, "id"> = { passwordHash, userId, createdAt }
-        await this.AuthModel.create(elementAuth)
+
         return user
     }
     async deleteOne(id: string) {
         const result = (await this.UserModel.deleteOne({ _id: id })).deletedCount === 1
         if (!result) throw new HttpException([{ message: "user not found", field: "id" }], HTTP_STATUSES.NOT_FOUND_404)
+    }
+    async updateOne(id: string, data: Partial<UserBd>) {
+        const result = await this.UserModel.updateOne({ _id: id }, data)
+        return result.modifiedCount === 1
+    }
+    async readUserInfo(refreshToken: string) {
+        const userId = this.jwtTokenService.getDataByRefreshToken(refreshToken)?.userId
+        const user: UserView | null = await this.UserModel.findById(userId).lean()
+        if (!user) throw new HttpException([{ message: "userId not exist", field: "userId" }], HTTP_STATUSES.NOT_FOUND_404)
+        const result: UserInfo = {
+            email: user.email,
+            login: user.login,
+            userId: user.id
+        }
+        return result
     }
 }

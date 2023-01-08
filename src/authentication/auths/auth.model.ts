@@ -1,21 +1,12 @@
-import { HydratedDocument, ObjectId, SchemaTypes } from 'mongoose';
+import { HydratedDocument, ObjectId } from 'mongoose';
 import { Prop, Schema, SchemaFactory, } from '@nestjs/mongoose';
 
-// import { RepositoryMongoose } from "../../_common/abstractions/Repository/Repository-mongoose";
 
 
-export interface LoginInput {
-    loginOrEmail: string
-    password: string
-}
-export interface LoginSuccessView {
-    /** JWT access token */
-    accessToken: string
-}
 export interface AuthInput {
     userId: string
-    /**  maxLength: 20 minLength: 6 */
-    passwordHash: string
+    password: string
+    createdAt: string
 }
 export interface AuthView {
     id: string
@@ -31,14 +22,8 @@ export interface AuthBd {
     passwordHash: string
     createdAt: string
 }
-export interface MeInput {
-    /**Headers */
-}
-export interface MeView {
-    email: string
-    login: string
-    userId: string
-}
+
+
 export type AuthBdDocument = HydratedDocument<AuthBd>;
 
 @Schema()

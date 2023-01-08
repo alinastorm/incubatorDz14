@@ -4,7 +4,7 @@ import { FilterQuery, Model } from "mongoose";
 import { LikeStatus } from "./like.model";
 import { Comment, CommentBd, CommentBdDocument, CommentSchema, CommentView, CommentViewDataMapper, LikesInfoView } from "./comment.model";
 import { Post, PostDocument } from '../posts/post.model';
-import { User, UserBdDocument } from '../users/user.model';
+import { User, UserBdDocument } from '../authentication/users/user.model';
 import { HTTP_STATUSES, Paginator, PaginatorQueries } from '../_commons/types/types';
 import { setPaginator } from '../_commons/helpers/paginator';
 
