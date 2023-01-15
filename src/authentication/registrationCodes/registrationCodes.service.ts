@@ -1,14 +1,14 @@
 import { HttpException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
-import { User, UserBd, UserBdDocument, UserView } from "src/authentication/users/user.model"
-import { CryptoService } from "src/_commons/services/crypto-service"
-import { HTTP_STATUSES } from "src/_commons/types/types"
+import { User, UserBd, UserBdDocument, UserView } from "../../authentication/users/user.model"
+import { CryptoService } from "../../_commons/services/crypto-service"
+import { HTTP_STATUSES } from "../../_commons/types/types"
 import { Auth, AuthBdDocument, AuthView } from "../auths/auth.model"
 import { v4 as uuidv4 } from "uuid";
-import add from 'date-fns/add'
+import { add } from 'date-fns'
 import { RegistrationCode, RegistrationCodeBd, RegistrationCodeDocument, RegistrationCodeInput, RegistrationCodeViewModel, RegistrationConfirmationCodeModel, RegistrationEmailResending } from "./registrationCode.model"
-import { EmailService } from "src/_commons/services/email-service"
+import { EmailService } from "../../_commons/services/email-service"
 import { UsersService } from "../users/users.service"
 
 
@@ -55,12 +55,12 @@ export class RegistrationCodeService {
         //     return res.status(400).json(result)
         // }
 
-        const subject = "activation code"
+        const subject = "resend activation code"
         const code = uuidv4()
         const link = `${process.env.API_URL}/confirm-email?code=${code}`
         const message =
             `
-            <h1>Thank for your registration</h1>
+            <h1>Resend confirmation code</h1>
             <p>To finish registration please follow the link below:
                <a href='${link}'>complete registration</a>
            </p>

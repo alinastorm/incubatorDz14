@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
-import { JwtTokenService } from "src/_commons/services/jwtToken-service"
-import { HTTP_STATUSES } from "src/_commons/types/types"
+import { JwtTokenService } from "../../_commons/services/jwtToken-service"
+import { HTTP_STATUSES } from "../../_commons/types/types"
 import { DeviceSession, DeviceSessionBd, DeviceSessionDocument } from "../devicesSessions/deviceSession.model"
 import { RefreshTokenPayload } from "./tokens-types"
 
@@ -22,8 +22,9 @@ export class TokensService {
      */
     async refreshTokens(refreshToken: string) {
         const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
+        if (!user) throw new HttpException([{ message: "refreshToken error", field: "refreshToken" }], HTTP_STATUSES.UNAUTHORIZED_401)
         const { userId, deviceId } = user
-        
+
         //проверяем есть ли сессия в бд соответствующуя из рефреш токена дате(iat) и deviceId 
         const iat: number = this.jwtTokenService.getIatFromToken(refreshToken) //iat from token
         const lastActiveDate = iat.toString()
@@ -39,6 +40,7 @@ export class TokensService {
                 })
                 //TODO send danger email токен перехвачен дата другая. Сессии этого устройства разорваны
             }
+            //refreshToken после logout
             throw new HttpException([{ message: "not found deviceSession", field: "refreshToken" }], HTTP_STATUSES.UNAUTHORIZED_401)
         }
         //TODO Проверка смены страны по ip нужен сервис определения// const ip: string = req.ip // IP address of device during signing in 

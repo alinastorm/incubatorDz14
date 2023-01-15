@@ -46,3 +46,14 @@ export class DeviceSession implements Omit<DeviceSessionBd, '_id'> {
 
 }
 export const deviceSessionSchema = SchemaFactory.createForClass(DeviceSession);
+
+export function deviceSessionMapper(value: DeviceSessionDocument | null): DeviceSessionView | null {
+
+    return value ?
+        {
+            ip: value.ip,
+            title: value.title,
+            lastActiveDate: value.lastActiveDate,
+            deviceId: value.deviceId,
+        } : null
+}

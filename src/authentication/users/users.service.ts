@@ -4,7 +4,7 @@ import { User, UserBd, UserBdDocument, userViewDataMapper, UserView, PaginatorUs
 import { FilterQuery, Model } from 'mongoose';
 import { HTTP_STATUSES, Paginator } from '../../_commons/types/types';
 import { setPaginator } from '../../_commons/helpers/paginator';
-import { JwtTokenService } from 'src/_commons/services/jwtToken-service';
+import { JwtTokenService } from '../../_commons/services/jwtToken-service';
 
 
 @Injectable()
@@ -14,13 +14,7 @@ export class UsersService {
         private jwtTokenService: JwtTokenService,
     ) { }
 
-    async readAll(loginOrEmail: string) {
-        let filter: FilterQuery<UserBd> = {}
-        if (loginOrEmail) {
-            filter = { $or: [] }
-            filter.$or.push({ email: { $regex: loginOrEmail, $options: 'i' } })
-            filter.$or.push({ login: { $regex: loginOrEmail, $options: 'i' } })
-        }
+    async readAll(filter: FilterQuery<UserBd>) { 
         const users = await this.UserModel.find(filter).lean()
         return users
     }
@@ -68,15 +62,16 @@ export class UsersService {
         const result = await this.UserModel.updateOne({ _id: id }, data)
         return result.modifiedCount === 1
     }
-    async readUserInfo(refreshToken: string) {
-        const userId = this.jwtTokenService.getDataByRefreshToken(refreshToken)?.userId
-        const user: UserView | null = await this.UserModel.findById(userId).lean()
-        if (!user) throw new HttpException([{ message: "userId not exist", field: "userId" }], HTTP_STATUSES.NOT_FOUND_404)
-        const result: UserInfo = {
-            email: user.email,
-            login: user.login,
-            userId: user.id
-        }
-        return result
-    }
+    // async readUserInfo(refreshToken: string) {
+    //     const { userId } = this.jwtTokenService.getDataByRefreshToken(refreshToken)
+    //     if (!userId) throw new HttpException([{ message: "refreshToken error", field: "refreshToken" }], HTTP_STATUSES.NOT_FOUND_404)
+    //     const user: UserView | null = await this.UserModel.findById(userId).lean()
+    //     if (!user) throw new HttpException([{ message: "userId not exist", field: "userId" }], HTTP_STATUSES.NOT_FOUND_404)
+    //     const result: UserInfo = {
+    //         email: user.email,
+    //         login: user.login,
+    //         userId: user.id
+    //     }
+    //     return result
+    // }
 }

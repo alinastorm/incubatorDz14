@@ -1,11 +1,10 @@
-import { HttpException, Injectable } from "@nestjs/common"
+import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
-import { JwtTokenService } from "src/_commons/services/jwtToken-service"
-import { HTTP_STATUSES } from "src/_commons/types/types"
-import { Auth } from "../auths/auth.model"
+import { JwtTokenService } from "../../_commons/services/jwtToken-service"
+
 import { RefreshTokenPayload } from "../tokens/tokens-types"
-import { DeviceSession, DeviceSessionBd, DeviceSessionDocument, DeviceSessionView } from "./deviceSession.model"
+import { DeviceSession, DeviceSessionBd, DeviceSessionDocument, deviceSessionMapper, DeviceSessionView } from "./deviceSession.model"
 
 @Injectable()
 export class DeviceSessionsService {
@@ -18,29 +17,21 @@ export class DeviceSessionsService {
     async addOne(data: DeviceSession) {
         return await this.DeviceSessionModel.create(data)
     }
-    async readAll(refreshToken: string) {
-
-        const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
-        const { userId } = user
-
-        const deviceSessions = await this.DeviceSessionModel.find({ userId })
-        const result: DeviceSessionView[] = deviceSessions.map(({ deviceId, ip, title, lastActiveDate }) => {
-            return { deviceId, ip, title, lastActiveDate: new Date(+lastActiveDate * 1000).toISOString() }
-        })
-        return result
+    async readAll(filter: Partial<DeviceSession>) {
+        return await this.DeviceSessionModel.find({ filter }).lean()
     }
     /**
      * Удаление всех сессий кроме текущей
      * @param refreshToken 
      */
-    async deleteAllExcludeCurrent(refreshToken: string) {
-        const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
-        const { userId, deviceId: tokenDeviceId } = user
+    async deleteAllExcludeCurrent({ userId, deviceId }) {
+        // const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
+        // const { userId, deviceId: tokenDeviceId } = user
 
         const deviceSessionsDb = await this.DeviceSessionModel.find({ userId })
         await Promise.all(deviceSessionsDb.map(
             async (sessionDb) => {
-                if (sessionDb.deviceId != tokenDeviceId) await this.DeviceSessionModel.deleteOne({ _id: sessionDb.id })
+                if (sessionDb.deviceId != deviceId) await this.DeviceSessionModel.deleteOne({ _id: sessionDb.id })
             })
         )
     }
@@ -48,11 +39,11 @@ export class DeviceSessionsService {
         const result = await this.DeviceSessionModel.deleteOne({ deviceId })
         return result.deletedCount === 1
     }
-    async deleteMany(refreshToken: string) {
-        const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
-        const { userId, deviceId } = user
+    async deleteMany(filter: Partial<DeviceSession>) {
+        // const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
+        // const { userId, deviceId } = user
 
-        await this.DeviceSessionModel.deleteMany({ userId, deviceId })
+        await this.DeviceSessionModel.deleteMany(filter)
 
         // //проверяем существование сессии 
         // const deviceSessions = await this.DeviceSessionModel.find({ deviceId })
@@ -68,7 +59,13 @@ export class DeviceSessionsService {
         // })
 
     }
-
+    // async toView(data: DeviceSessionDocument | DeviceSessionDocument[] | null) {
+    //     if (!data) return null
+    //     if (Array.isArray(data)) {
+    //         return data.map(deviceSessionMapper)
+    //     }
+    //     return deviceSessionMapper(data)
+    // }
 
 
 }

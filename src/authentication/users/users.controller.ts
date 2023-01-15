@@ -1,7 +1,7 @@
 import { Controller, Get, Body, Post, Param, Query, Delete, HttpCode } from '@nestjs/common';
 import { UserViewDocument, UserInputDto, PaginatorUsersDto } from './user.model';
 import { UsersService } from './users.service';
-import { Cookies } from 'src/_commons/decorators/cookies.decorator';
+import { Cookies } from '../../_commons/decorators/cookies.decorator';
 import { AuthService } from '../auths/auths.service';
 //TODO
 @Controller('users') export class UserController {
@@ -32,11 +32,6 @@ import { AuthService } from '../auths/auths.service';
         return await this.userService.deleteOne(id)
     }
 
-    @Get('me')
-    async getUserInfo(
-        @Cookies('refreshToken') refreshToken: string
-    ) {
-        return await this.userService.readUserInfo(refreshToken)
-    }
+ 
 
 }

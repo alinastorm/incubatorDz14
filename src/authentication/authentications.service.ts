@@ -1,23 +1,23 @@
 import { HttpException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
-import { Model } from "mongoose"
-import { User, UserBd, UserBdDocument, UserView } from "src/authentication/users/user.model"
-import { UsersService } from "src/authentication/users/users.service"
-import { CryptoService } from "src/_commons/services/crypto-service"
-import { JwtTokenService } from "src/_commons/services/jwtToken-service"
-import { HTTP_STATUSES } from "src/_commons/types/types"
+import { FilterQuery, Model } from "mongoose"
+import { User, UserBd, UserBdDocument, UserInfo, UserView } from "../authentication/users/user.model"
+import { UsersService } from "../authentication/users/users.service"
+import { CryptoService } from "../_commons/services/crypto-service"
+import { JwtTokenService } from "../_commons/services/jwtToken-service"
+import { HTTP_STATUSES } from "../_commons/types/types"
 import { v4 as uuidv4 } from "uuid";
-import { EmailService } from "src/_commons/services/email-service"
-import add from 'date-fns/add'
+import { EmailService } from "../_commons/services/email-service"
+import { add } from 'date-fns'
 import { AuthService } from "./auths/auths.service"
-import { DeviceSession, DeviceSessionDocument } from "./devicesSessions/deviceSession.model"
+import { DeviceSession, DeviceSessionDocument, deviceSessionMapper } from "./devicesSessions/deviceSession.model"
 import { Auth, AuthBdDocument } from "./auths/auth.model"
 import { RegistrationCode, RegistrationCodeDocument } from "./registrationCodes/registrationCode.model"
 import { RegistrationCodeService } from "./registrationCodes/registrationCodes.service"
 import { Registration } from "./authentication.types"
 import { AccessToken, RefreshToken, RefreshTokenPayload } from "./tokens/tokens-types"
 import { DeviceSessionsService } from "./devicesSessions/deviceSessions.service"
-
+import { meViewDataMapper } from './users/user.model'
 
 
 @Injectable()
@@ -37,9 +37,9 @@ export class AuthenticationService {
 
     async registration(data: Registration) {
         const { email, login, password } = data
-        const usersByLogin: UserBd[] = await this.userService.readAll(login)
+        const usersByLogin: UserBd[] = await this.userService.readAll({ login })
         if (usersByLogin.length) throw new HttpException([{ message: "login exist", field: "login" }], HTTP_STATUSES.BAD_REQUEST_400)
-        const usersByEmails: UserBd[] = await this.userService.readAll(email)
+        const usersByEmails: UserBd[] = await this.userService.readAll({ email })
         if (usersByEmails.length) throw new HttpException([{ message: "email exist", field: "email" }], HTTP_STATUSES.BAD_REQUEST_400)
 
         //создаем юзера        
@@ -80,13 +80,21 @@ export class AuthenticationService {
         await this.registrationCodeService.addOne(element)
     }
     /** Try login user to the system
+     * Высылает rfresh access tokens и генриует device session
      * @param {string} ip (req.ip) IP address of device during signing in. 
      * @param {string} title (req.headers['user-agent']) Device name: for example Chrome 105 (received by parsing http header "user-agent". 
     */
     async Login(loginOrEmail: string, password, ip: string, title: string) {
 
         // Проверяем существование юзера с указанным логином
-        const users: UserBd[] = await this.userService.readAll(loginOrEmail)
+        const filter: FilterQuery<UserBd> = {
+            $or: [
+                { email: { $regex: loginOrEmail, $options: 'i' } },
+                { login: { $regex: loginOrEmail, $options: 'i' } }
+            ]
+        }
+
+        const users: UserBd[] = await this.userService.readAll(filter)
         if (!users.length) throw new HttpException([{ message: "loginOrEmail not exist", field: "loginOrEmail" }], HTTP_STATUSES.UNAUTHORIZED_401)
 
         // Проверяем подтверждение почты пользователя
@@ -96,7 +104,7 @@ export class AuthenticationService {
         // Достаем hash юзера
         // Проверяем существование hash в bd
         const userId = user._id.toString()
-        const auths = await this.authService.readOne(userId)
+        const auths = await this.authService.readAll({ userId })
         const auth = auths[0]
         if (!auth) throw new HttpException([{ message: "No auth", field: "auth" }], HTTP_STATUSES.UNAUTHORIZED_401)
 
@@ -119,9 +127,25 @@ export class AuthenticationService {
 
         return { accessToken, refreshToken }
     }
+    /**
+     * Фактически просто удаляет device Sessions
+     * @param refreshToken 
+     */
+    async logout({ userId, deviceId, lastActiveDate }) {
 
-    async logout(refreshToken: string) {     
-        await this.deviceSessionsService.deleteMany(refreshToken)
+        //проверяем существование сесси с userId, deviceId,lastActiveDate. Может по ней уже вышли logout или рефрешнули токен. 
+        const deviceSessions = await this.deviceSessionsService.readAll({ userId, deviceId, lastActiveDate })
+        if (!deviceSessions.length) throw new HttpException([{ message: "deviceSessions not found", field: "refreshToken" }], HTTP_STATUSES.UNAUTHORIZED_401)
+        //удаляем сессии с userId, deviceId
+        await this.deviceSessionsService.deleteMany({ userId, deviceId })
+    }
+    async readUserInfo(userId: string) {
+
+        const users = await this.userService.readAll({ _id: userId })
+        const user = users[0]
+        if (!user) throw new HttpException([{ message: "userId not exist", field: "userId" }], HTTP_STATUSES.NOT_FOUND_404)
+        return meViewDataMapper(user)  
+
     }
 
 }

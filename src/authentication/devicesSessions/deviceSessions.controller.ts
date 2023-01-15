@@ -1,5 +1,8 @@
-import { Controller, Get, Delete, Post, Param } from "@nestjs/common";
-import { Cookies } from "src/_commons/decorators/cookies.decorator";
+import { Controller, Get, Delete, Post, Param, UseGuards } from "@nestjs/common";
+import { PayloadRefreshToken } from "../../_commons/decorators/payloadRefreshToken.decorator";
+import { RefreshTokenGuard } from "../../_commons/guards/refresh.token.guard";
+import { Cookies } from "../../_commons/decorators/cookies.decorator";
+import { RefreshTokenPayload } from "../tokens/tokens-types";
 import { DeviceSessionsService } from "./deviceSessions.service";
 
 
@@ -9,17 +12,19 @@ export class DevicesSessionsController {
     constructor(private deviceSessionsService: DeviceSessionsService) { }
 
     @Get('devices')
+    @UseGuards(RefreshTokenGuard)
     async readAllSessions(
-        @Cookies('refreshToken') refreshToken: string
+        @PayloadRefreshToken() payloadRefreshToken:  RefreshTokenPayload & { lastActiveDate: string }
     ) {
-        return this.deviceSessionsService.readAll(refreshToken)
+        return this.deviceSessionsService.readAll(payloadRefreshToken)
     }
 
     @Post('devices')
     async deleteAllExcludeCurrentSessions(
-        @Cookies('refreshToken') refreshToken: string
+        @PayloadRefreshToken() payloadRefreshToken: RefreshTokenPayload & { lastActiveDate: string }
     ) {
-        return this.deviceSessionsService.deleteAllExcludeCurrent(refreshToken)
+        const { userId, deviceId } = payloadRefreshToken
+        return this.deviceSessionsService.deleteAllExcludeCurrent({ userId, deviceId })
     }
 
     @Delete('devices')

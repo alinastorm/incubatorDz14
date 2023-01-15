@@ -29,30 +29,63 @@ import { RecoveryPasswordsService } from './authentication/recoveryPasswords/rec
 import { RecoweryPassword, passwordRecowerySchema } from './authentication/recoveryPasswords/recoveryPassword.model';
 import { EmailService } from './_commons/services/email-service';
 import { RegistrationCode, registrationCodeSchema } from './authentication/registrationCodes/registrationCode.model';
+import { AuthService } from './authentication/auths/auths.service';
+import { AuthenticationController } from './authentication/authentications.controller';
+import { AuthenticationService } from './authentication/authentications.service';
+import { RegistrationCodeService } from './authentication/registrationCodes/registrationCodes.service';
+import { RegistrationController } from './authentication/registrationCodes/registrationCodes.controller';
+import { RecoweryPasswordController } from './authentication/recoveryPasswords/recoweryPasswords.controller';
+import { TokensController } from './authentication/tokens/tokens.controller';
+import { TokensService } from './authentication/tokens/tokens.service';
 // import './_commons/utils/mongoose.utils';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(),//.env
     JwtModule.register({}),
-    MongooseModule.forRoot(process.env.MONGO_URL_ATLAS, { dbName: process.env.MONGO_DB_NAME }),
-    MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
-    MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
-    MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
-    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    MongooseModule.forFeature([{ name: DeviceSession.name, schema: deviceSessionSchema }]),
-    MongooseModule.forFeature([{ name: RecoweryPassword.name, schema: passwordRecowerySchema }]),
-    MongooseModule.forFeature([{ name: RegistrationCode.name, schema: registrationCodeSchema }]),
+    MongooseModule.forRoot(process.env.MONGO_URL_ATLAS, { dbName: process.env.MONGO_DB_NAME, }),
+    MongooseModule.forFeature([
+      { name: Auth.name, schema: AuthSchema },
+      { name: Comment.name, schema: CommentSchema },
+      { name: Post.name, schema: PostSchema },
+      { name: Blog.name, schema: BlogSchema },
+      { name: User.name, schema: UserSchema },
+      { name: DeviceSession.name, schema: deviceSessionSchema },
+      { name: RecoweryPassword.name, schema: passwordRecowerySchema },
+      { name: RegistrationCode.name, schema: registrationCodeSchema }
+    ]),
   ],
   // imports: [MongooseModule, UserModule],
-  controllers: [AppController, UserController, PostsController, CommentsController, BlogsController, TestingController, CommentsController],
+  controllers: [AppController,
+    UserController,
+    PostsController,
+    CommentsController,
+    BlogsController,
+    TestingController,
+    CommentsController,
+    AuthenticationController,
+    RegistrationController,
+    RecoweryPasswordController,
+    TokensController,
+  ],
   providers: [
     CommentIdValidatorPipe,
-    AppService, CryptoService, UsersService, BlogsService, PostsService, CommentsService, JwtTokenService, DeviceSessionsService, RecoveryPasswordsService,EmailService
+    AppService,
+    CryptoService,
+    UsersService,
+    BlogsService,
+    PostsService,
+    CommentsService,
+    JwtTokenService,
+    DeviceSessionsService,
+    RecoveryPasswordsService,
+    EmailService,
+    AuthService,
+    AuthenticationService,
+    RegistrationCodeService,
+    TokensService,
     // { provide: 'CommentIdValidatorPipe', useClass: CommentIdValidatorPipe }
   ],
-  // providers: [AppService, UserService,UserSchemaClass],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

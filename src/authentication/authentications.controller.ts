@@ -1,10 +1,13 @@
-import { Controller, Post } from "@nestjs/common";
+import { Controller, Post, HttpException, UseGuards, Get } from "@nestjs/common";
 import { Body, Headers, Ip, Res } from "@nestjs/common/decorators";
 import { Response } from "express";
-import { Cookies } from "src/_commons/decorators/cookies.decorator";
-import { HTTP_STATUSES } from "src/_commons/types/types";
+import { PayloadRefreshToken } from "src/_commons/decorators/payloadRefreshToken.decorator";
+import { RefreshTokenGuard } from "src/_commons/guards/refresh.token.guard";
+import { Cookies } from "../_commons/decorators/cookies.decorator";
+import { HTTP_STATUSES } from "../_commons/types/types";
 import { LoginDto, RegistrationDto } from "./authentication.types";
 import { AuthenticationService } from "./authentications.service";
+import { RefreshTokenPayload } from "./tokens/tokens-types";
 
 @Controller("auth")
 export class AuthenticationController {
@@ -18,7 +21,7 @@ export class AuthenticationController {
         @Body() body: RegistrationDto
     ) {
         const { email, login, password } = body
-        this.authenticationService.registration({ email, login, password })
+        return this.authenticationService.registration({ email, login, password })
     }
 
     /**
@@ -34,18 +37,32 @@ export class AuthenticationController {
         @Ip() ip: string,
         @Res() res: Response
     ) {
-        const { loginOrEmail, password } = body
-        const { accessToken, refreshToken } = await this.authenticationService.Login(loginOrEmail, password, ip, title)
-
-        res.cookie("refreshToken", refreshToken, { maxAge: +process.env.JWT_REFRESH_LIFE_TIME_SECONDS * 1000, httpOnly: true, secure: true })
-        res.status(HTTP_STATUSES.OK_200).send(accessToken)
+        try {
+            const { loginOrEmail, password } = body
+            const { accessToken, refreshToken } = await this.authenticationService.Login(loginOrEmail, password, ip, title)
+            res.cookie("refreshToken", refreshToken, { maxAge: +process.env.JWT_REFRESH_LIFE_TIME_SECONDS * 1000, httpOnly: true, secure: true })
+            res.send(accessToken)
+        } catch (error) {
+            throw new HttpException(error.response, error.status);
+        }
     }
-    
+
     @Post('logout')
+    @UseGuards(RefreshTokenGuard)
     logout(
-        @Cookies('refreshToken') refreshToken: string
+        @PayloadRefreshToken() payloadRefreshToken: RefreshTokenPayload & { lastActiveDate: string }
     ) {
-        return this.authenticationService.logout(refreshToken)
+        const { userId, deviceId, lastActiveDate } = payloadRefreshToken
+        return this.authenticationService.logout({ userId, deviceId, lastActiveDate })
+    }
+
+    @Get('me')
+    @UseGuards(RefreshTokenGuard)
+    async getUserInfo(
+        @PayloadRefreshToken() payloadRefreshToken: RefreshTokenPayload & { lastActiveDate: string }
+    ) {
+        const { userId } = payloadRefreshToken
+        return await this.authenticationService.readUserInfo(userId)
     }
 
 

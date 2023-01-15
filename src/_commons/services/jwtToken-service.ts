@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { JwtService } from '@nestjs/jwt';
-import { AccessToken, AccessTokenPayload, RefreshTokenPayload } from "src/authentication/tokens/tokens-types"
+import { AccessToken, AccessTokenPayload, RefreshTokenPayload } from "../../authentication/tokens/tokens-types"
 
 
 
@@ -32,7 +32,7 @@ export class JwtTokenService {
             return null
         }
     }
-    getDataByRefreshToken(token: string) {
+    getDataByRefreshToken(token: string): RefreshTokenPayload | null {
         try {
             const result: any = this.jwtService.verify(token, { secret: process.env.JWT_REFRESH_SECRET })
             return result as RefreshTokenPayload

@@ -1,5 +1,4 @@
-import { Controller, Post, Body } from "@nestjs/common";
-import { UserInput, UserInputDto } from "src/authentication/users/user.model";
+import { Controller, Post, Get, Body, Query, Res, HttpCode, Header } from "@nestjs/common";
 import { RegistrationConfirmationCodeModel, RegistrationEmailResending } from "./registrationCode.model";
 import { RegistrationCodeService } from "./registrationCodes.service";
 
@@ -11,20 +10,25 @@ export class RegistrationController {
         private registrationService: RegistrationCodeService
     ) { }
 
-  
-
     @Post('registration-confirmation')
-    registrationConfirmation(
+    registrationConfirmationPOST(
         @Body() body: RegistrationConfirmationCodeModel
     ) {
         this.registrationService.confirmRegistrationCode(body)
+    }
+
+    @Get('registration-confirmation') @HttpCode(302) @Header('Location', 'https://ubt.by')
+    registrationConfirmationGET(
+        @Query('code') code: string
+    ) {
+        return this.registrationService.confirmRegistrationCode({ code })
     }
 
     @Post('registration-email-resending')
     registrationEmailResending(
         @Body() body: RegistrationEmailResending
     ) {
-        this.registrationService.resendRegistrationCode(body)
+        return this.registrationService.resendRegistrationCode(body)
     }
 
 }

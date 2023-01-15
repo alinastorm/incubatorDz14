@@ -3,7 +3,9 @@
 # compiled output
 /dist
 /node_modules
-
+#ssl
+*.pem
+/ssl
 # Logs
 logs
 *.log

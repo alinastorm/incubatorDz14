@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common"
-import nodemailer, { Transporter } from "nodemailer"
+import { Injectable, Logger } from "@nestjs/common"
+import { Transporter } from "nodemailer";
 import Mail from "nodemailer/lib/mailer"
 import SendmailTransport from "nodemailer/lib/sendmail-transport";
 
@@ -9,27 +9,35 @@ import SendmailTransport from "nodemailer/lib/sendmail-transport";
 @Injectable()
 export class EmailService {
 
-    private transporter: Transporter<SendmailTransport.SentMessageInfo> = nodemailer.createTransport({
-        //и так работает
-        service: 'gmail',
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASSWORD,
-        }
-        //и так работает
-
-        // port: 587,
-        // host: "smtp.gmail.com",
-        // auth: {
-        //     user: "nickarb10888@gmail.com",
-        //     pass: "treecyvaqtxnhmzs",
-        // },
-        // secure: false,
-    });
-
+    private transporter: Transporter<SendmailTransport.SentMessageInfo>
+    constructor() {
+        import('nodemailer').then((nodemailer) => {
+            this.transporter = nodemailer.createTransport({
+                //и так работает
+                service: 'gmail',
+                auth: {
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASSWORD,
+                }
+                // и так работает
+                // port: 587,
+                // host: "smtp.gmail.com",
+                // auth: {
+                //     user: process.env.SMTP_USER,
+                //     pass: process.env.SMTP_PASSWORD,
+                // },
+                // secure: false,
+            })
+            // const logger = new Logger('HELP');
+            // logger.log(this.transporter)
+            this.connect()
+        })
+    }
     async connect() {
-        console.log("EmailService ...");
-        if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) console.log("EmailService no login or pass")
+        if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+            const logger = new Logger('EmailService');
+            logger.log("EmailService no login or pass")
+        }
         await this.verify()
     }
     async verify() {
@@ -37,10 +45,13 @@ export class EmailService {
             // verify connection configuration
             this.transporter.verify(function (error, success) {
                 if (error) {
-                    console.log(error);
+                    const logger = new Logger('EmailService');
+                    logger.log(error)
                     reject(error);
+
                 } else {
-                    console.log("EmailService started");
+                    const logger = new Logger('EmailService');
+                    logger.log("EmailService started")
                     resolve(success);
                 }
             });
@@ -58,14 +69,14 @@ export class EmailService {
 
         await new Promise((resolve, reject) => {
             // send mail
-            // console.log('mail options:',);
-
             this.transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
-                    // console.error(err);
+                    const logger = new Logger('EmailService');
+                    logger.log(err)
                     reject(err);
                 } else {
-                    // console.log(info);
+                    const logger = new Logger('EmailService');
+                    logger.log('email sent')
                     resolve(info);
                 }
             });
@@ -73,6 +84,8 @@ export class EmailService {
 
     }
     stop() {
+        const logger = new Logger('EmailService');
+        logger.log('EmailService stoped')
         this.transporter.close()
     }
     // sendActivationMail(to: string | Mail.Address | (string | Mail.Address)[] | undefined, link: string) {

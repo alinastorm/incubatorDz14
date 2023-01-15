@@ -23,6 +23,11 @@ export interface UserView {
     email: string
     createdAt: string //	TODO в дз не обязательный в интерфей
 }
+export interface MeView {
+    email: string
+    login: string
+    userId: string
+}
 export interface UserBd {
     _id: string
     login: string
@@ -90,6 +95,14 @@ export function userViewDataMapper(value: UserBdDocument | null): UserView | nul
             login: value.login,
             email: value.email,
             createdAt: value.createdAt //	TODO в дз не обязательный в интерфей
+        } : null
+}
+export function meViewDataMapper(value: UserBd | null): MeView | null {
+    return value ?
+        {
+            email: value.email,
+            login: value.login,
+            userId: value._id.toString(),
         } : null
 }
 

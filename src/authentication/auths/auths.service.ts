@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
-import { CryptoService } from "src/_commons/services/crypto-service"
+import { CryptoService } from "../../_commons/services/crypto-service"
 import { Auth, AuthBdDocument, AuthInput } from "./auth.model"
 
 
@@ -16,7 +16,7 @@ export class AuthService {
     ) { }
 
     async readAll(filter: Partial<Auth>) {
-        return await this.AuthModel.find({ filter })
+        return await this.AuthModel.find({ filter }).lean()
     }
     async readOne(id: string) {
         return await this.AuthModel.find({ _id: id })

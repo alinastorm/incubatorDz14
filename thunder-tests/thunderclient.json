@@ -65,11 +65,11 @@
     "colId": "c15ddffa-0f58-4d69-8518-4f804a067cd8",
     "containerId": "",
     "name": "DeleteAllData",
-    "url": "http://localhost:9002/testing/all-data",
+    "url": "https://localhost:9002/testing/all-data",
     "method": "DELETE",
     "sortNum": 10000,
     "created": "2022-12-24T16:17:19.432Z",
-    "modified": "2023-01-04T15:37:46.978Z",
+    "modified": "2023-01-14T17:53:20.418Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -322,6 +322,183 @@
       "raw": "{\n  \"title\": \"string\",\n  \"shortDescription\": \"string\",\n  \"content\": \"string\",\n  \"blogId\": \"63b973f8824fe8e56bc3ec18\"\n}",
       "form": []
     },
+    "tests": []
+  },
+  {
+    "_id": "ed3cac8f-a0cc-40fd-a46c-2474a7257075",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "registration",
+    "url": "https://localhost:9002/auth/registration",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2023-01-14T13:00:55.223Z",
+    "modified": "2023-01-14T17:53:32.017Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"login\": \"login3\",\n  \"password\": \"password3\",\n  \"email\": \"7534640@gmail.com\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "2596978f-dae6-4771-99d3-4734f377761d",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "confirm email code",
+    "url": "https://localhost:9002/auth/registration-confirmation?code=aeb4ba83",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2023-01-14T18:04:14.573Z",
+    "modified": "2023-01-14T18:27:28.244Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "code",
+        "value": "aeb4ba83",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "6ae4efc6-5401-490b-97e2-7a0f559915cb",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "resend email code",
+    "url": "https://localhost:9002/auth/registration-email-resending",
+    "method": "POST",
+    "sortNum": 30000,
+    "created": "2023-01-14T18:44:50.401Z",
+    "modified": "2023-01-14T18:47:32.240Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"7534640@gmail.com\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "e0b3e0f3-94a2-4182-b9ab-8421320e6921",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "password recovery",
+    "url": "https://localhost:9002/auth/password-recovery",
+    "method": "POST",
+    "sortNum": 40000,
+    "created": "2023-01-14T19:04:04.512Z",
+    "modified": "2023-01-15T10:58:49.907Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"7534640@gmail.com\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "c0270188-4e41-468f-b03b-1a45e8855408",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "new password",
+    "url": "https://localhost:9002/auth/new-password",
+    "method": "POST",
+    "sortNum": 50000,
+    "created": "2023-01-15T13:32:12.243Z",
+    "modified": "2023-01-15T13:33:43.039Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"newPassword\": \"string\",\n  \"recoveryCode\": \"c22e5f22-8b48-4152-9457-5332d7e68bfe\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "ffd37112-ed8b-41db-8f1c-26da4c708e2f",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "login",
+    "url": "https://localhost:9002/auth/login",
+    "method": "POST",
+    "sortNum": 60000,
+    "created": "2023-01-15T15:31:02.259Z",
+    "modified": "2023-01-15T19:38:53.346Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"loginOrEmail\": \"login3\",\n  \"password\": \"password3\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "d8bfd774-caf8-4308-8dad-50cb84023657",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "refresh-token",
+    "url": "https://localhost:9002/auth/refresh-token",
+    "method": "POST",
+    "sortNum": 70000,
+    "created": "2023-01-15T15:43:46.587Z",
+    "modified": "2023-01-15T20:03:05.781Z",
+    "headers": [
+      {
+        "name": "Cookie",
+        "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2M0NWJjMzhjYjdlMjE5NzQ2MGU1NTgiLCJkZXZpY2VJZCI6IjM0ZDc0NDhiLTE1ODMtNDA5NC04YWY2LTg1NTI3MmFiNGIwMSIsImlhdCI6MTY3MzgxMjkzOSwiZXhwIjoxNjczODEyOTU5fQ.EzPf4DdiPoqnkDLQMw5J9cli-ARmQSeh1ih4-ld0XYM"
+      }
+    ],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"accessToken\": \"string\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "89b7a3ed-8cf5-41f9-ae05-9a40eb5a91a2",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "logout",
+    "url": "https://localhost:9002/auth/logout",
+    "method": "POST",
+    "sortNum": 80000,
+    "created": "2023-01-15T17:23:51.330Z",
+    "modified": "2023-01-15T19:41:26.166Z",
+    "headers": [
+      {
+        "name": "Cookie",
+        "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2M0NTZjZTc0OGNmNTgxYjQ4ZWQwMDciLCJkZXZpY2VJZCI6IjY4N2RkZGI1LTBkYzEtNGQ0NC1hMGYzLTZmZWMzMGZlNGYzYiIsImlhdCI6MTY3MzgxMTY3MywiZXhwIjoxNjczODExNjkzfQ.DwTC1WFTYml2b08VptEC7TokQkfl0CWu3p-4S03RgBM"
+      }
+    ],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "15771ae2-2555-418f-9b6f-756950de6e8e",
+    "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
+    "containerId": "",
+    "name": "me",
+    "url": "https://localhost:9002/auth/me",
+    "method": "GET",
+    "sortNum": 90000,
+    "created": "2023-01-15T19:42:28.174Z",
+    "modified": "2023-01-15T20:20:12.122Z",
+    "headers": [
+      {
+        "name": "Cookie",
+        "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2M0NWJjMzhjYjdlMjE5NzQ2MGU1NTgiLCJkZXZpY2VJZCI6Ijk0YzY4NjEwLTBiN2MtNGEyMi05Zjk5LWFhNzA1ZjFmNzE0ZSIsImlhdCI6MTY3MzgxNDAwMywiZXhwIjoxNjczODE0MDIzfQ.QoFat_vcNPkLzereEPs1m1DXrSIGwrIeEtz97iC_kCQ"
+      }
+    ],
+    "params": [],
     "tests": []
   }
 ]
