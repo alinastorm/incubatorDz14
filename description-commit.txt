@@ -4,3 +4,4 @@
 1.0.3 feat:recoveryPassword
 1.0.4 refactor: authentication
 1.0.5 feat: authentication
+1.0.6 feat: DZ14 Sprint 04,week 2 1 part. 

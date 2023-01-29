@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import validationPipe from './_commons/pipes/mapValidationErrors.pipe';
 import * as fs from "fs"
 import * as cookieParser from 'cookie-parser';
+import { ExceptionMapperFilter } from './_commons/filters/exception.filter';
 
 
 async function bootstrap() {
@@ -27,6 +28,9 @@ async function bootstrap() {
 
   //Global pipe
   app.useGlobalPipes(validationPipe)
+
+  //Exception Mapper Filter
+  app.useGlobalFilters(new ExceptionMapperFilter());
 
   //swager http://localhost:9002/api
   const config = new DocumentBuilder()

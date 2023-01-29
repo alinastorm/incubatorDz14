@@ -124,7 +124,7 @@ export class AuthenticationService {
         const lastActiveDate: string = iat.toString()//Date of the last generating of refresh/access tokens 
         const element: DeviceSession = { lastActiveDate, deviceId, ip, title, userId }
         this.deviceSessionsService.addOne(element)
-
+        const a = 1
         return { accessToken, refreshToken }
     }
     /**
@@ -144,7 +144,7 @@ export class AuthenticationService {
         const users = await this.userService.readAll({ _id: userId })
         const user = users[0]
         if (!user) throw new HttpException([{ message: "userId not exist", field: "userId" }], HTTP_STATUSES.NOT_FOUND_404)
-        return meViewDataMapper(user)  
+        return meViewDataMapper(user)
 
     }
 

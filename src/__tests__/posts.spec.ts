@@ -7,7 +7,7 @@ import { BlogInput, BlogView } from 'src/blogs/blog.model';
 import { ExtendedLikesInfoView, PostInput, PostView } from 'src/posts/post.model';
 import { LikeStatus } from '../comments/like.model';
 
-describe('Cats', () => {
+describe('POSTS', () => {
     let app: INestApplication;
     // let postsService = { findAll: () => ['test'] };
     let http

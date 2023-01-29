@@ -17,7 +17,7 @@
             "runtimeArgs": [
                 "--inspect-brk",
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
-                "src/__tests__/post.spec.ts",           
+                "src/__tests__/users.spec.ts",           
                 // "--testTimeout= 100000",
                 "--runInBand",
                 "--forceExit",

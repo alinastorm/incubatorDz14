@@ -11,20 +11,22 @@ export class RegistrationController {
     ) { }
 
     @Post('registration-confirmation')
+    @HttpCode(204)
     registrationConfirmationPOST(
         @Body() body: RegistrationConfirmationCodeModel
     ) {
-        this.registrationService.confirmRegistrationCode(body)
+        return this.registrationService.confirmRegistrationCode(body)
     }
-
-    @Get('registration-confirmation') @HttpCode(302) @Header('Location', 'https://ubt.by')
-    registrationConfirmationGET(
-        @Query('code') code: string
-    ) {
-        return this.registrationService.confirmRegistrationCode({ code })
-    }
+    //мое
+    // @Get('registration-confirmation') @HttpCode(302) @Header('Location', 'https://ubt.by')
+    // registrationConfirmationGET(
+    //     @Query('code') code: string
+    // ) {
+    //     return this.registrationService.confirmRegistrationCode({ code })
+    // }
 
     @Post('registration-email-resending')
+    @HttpCode(204)
     registrationEmailResending(
         @Body() body: RegistrationEmailResending
     ) {

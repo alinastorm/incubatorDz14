@@ -32,7 +32,9 @@ export class RegistrationCodeService {
         const { code } = data
         const codes = await this.RegistrationCodeModel.find({ code })
 
-        if (!codes.length) throw new HttpException([{ message: "code not found", field: "code" }], HTTP_STATUSES.BAD_REQUEST_400)
+        if (!codes.length)  throw new HttpException([{ message: "code not found", field: "code" }], HTTP_STATUSES.BAD_REQUEST_400)
+        // if (!codes.length)  throw new HttpException([{ message: "code not found", field: "code" }], HTTP_STATUSES.BAD_REQUEST_400)
+
         if (codes[0].expirationDate < new Date()) throw new HttpException([{ message: "code expired", field: "code" }], HTTP_STATUSES.BAD_REQUEST_400)
 
         const userId = codes[0].userId

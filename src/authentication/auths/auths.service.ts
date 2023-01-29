@@ -26,7 +26,8 @@ export class AuthService {
         const passwordHash = await this.cryptoService.generatePasswordHash(password)
 
         const element: Auth = { createdAt, passwordHash, userId }
-        return await this.AuthModel.create(element)
+        const auth = await this.AuthModel.create(element)
+        return auth
     }
     async updateOne(id: string, data) {
         return await this.AuthModel.updateOne({ _id: id }, data)

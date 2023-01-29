@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtTokenService } from '../services/jwtToken-service';
-import { RefreshTokenPayload } from 'src/authentication/tokens/tokens-types';
+import { RefreshTokenPayload } from '../../authentication/tokens/tokens-types';
 import { HTTP_STATUSES } from '../types/types';
 
 @Injectable()

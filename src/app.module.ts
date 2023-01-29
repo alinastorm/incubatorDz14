@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config'
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './authentication/users/users.controller';
@@ -20,7 +20,7 @@ import { CommentsService } from './comments/comments.service';
 import { CommentSchema, Comment } from './comments/comment.model';
 import { CommentIdValidatorPipe } from './_commons/pipes/commentId.validation.pipe';
 import { Auth, AuthSchema } from './authentication/auths/auth.model';
-import { AppLoggerMiddleware } from './_commons/helpers/logger';
+import { AppLoggerMiddleware } from './_commons/helpers/app.logger';
 import { JwtModule } from '@nestjs/jwt'
 import { JwtTokenService } from './_commons/services/jwtToken-service';
 import { DeviceSession, deviceSessionSchema } from './authentication/devicesSessions/deviceSession.model';
@@ -37,6 +37,8 @@ import { RegistrationController } from './authentication/registrationCodes/regis
 import { RecoweryPasswordController } from './authentication/recoveryPasswords/recoweryPasswords.controller';
 import { TokensController } from './authentication/tokens/tokens.controller';
 import { TokensService } from './authentication/tokens/tokens.service';
+import { LoggerMiddleware } from './_commons/decorators/logger.decorator';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 // import './_commons/utils/mongoose.utils';
 
 @Module({
@@ -85,10 +87,13 @@ import { TokensService } from './authentication/tokens/tokens.service';
     RegistrationCodeService,
     TokensService,
     // { provide: 'CommentIdValidatorPipe', useClass: CommentIdValidatorPipe }
+    // { provide: APP_INTERCEPTOR, useClass: LoggerInterceptor },
   ],
+
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(AppLoggerMiddleware).forRoutes('*');
+    // consumer.apply(LoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.POST });
   }
 }

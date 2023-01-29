@@ -1,8 +1,8 @@
-import { Controller, Post, HttpException, UseGuards, Get } from "@nestjs/common";
+import { Controller, Post, HttpException, UseGuards, Get, HttpCode } from "@nestjs/common";
 import { Body, Headers, Ip, Res } from "@nestjs/common/decorators";
 import { Response } from "express";
-import { PayloadRefreshToken } from "src/_commons/decorators/payloadRefreshToken.decorator";
-import { RefreshTokenGuard } from "src/_commons/guards/refresh.token.guard";
+import { PayloadRefreshToken } from "../_commons/decorators/payloadRefreshToken.decorator";
+import { RefreshTokenGuard } from "../_commons/guards/refresh.token.guard";
 import { Cookies } from "../_commons/decorators/cookies.decorator";
 import { HTTP_STATUSES } from "../_commons/types/types";
 import { LoginDto, RegistrationDto } from "./authentication.types";
@@ -17,6 +17,7 @@ export class AuthenticationController {
     ) { }
 
     @Post('registration')
+    @HttpCode(204)
     async registration(
         @Body() body: RegistrationDto
     ) {
@@ -39,9 +40,9 @@ export class AuthenticationController {
     ) {
         try {
             const { loginOrEmail, password } = body
-            const { accessToken, refreshToken } = await this.authenticationService.Login(loginOrEmail, password, ip, title)
+            const { accessToken, refreshToken } = await this.authenticationService.Login(loginOrEmail, password, ip, title)            
             res.cookie("refreshToken", refreshToken, { maxAge: +process.env.JWT_REFRESH_LIFE_TIME_SECONDS * 1000, httpOnly: true, secure: true })
-            res.send(accessToken)
+            res.status(200).send({ accessToken })
         } catch (error) {
             throw new HttpException(error.response, error.status);
         }

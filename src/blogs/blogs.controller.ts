@@ -1,11 +1,12 @@
 import { Controller, Get, Body, Post, Put, Param, Query, Delete, HttpCode } from '@nestjs/common';
-import { UsePipes } from '@nestjs/common/decorators';
+import { UseGuards, UsePipes } from '@nestjs/common/decorators';
 import { BlogIdValidatorPipe } from '../_commons/pipes/blogId.validation.pipe';
 import { PostInput, PostView } from '../posts/post.model';
 import { PostsService } from '../posts/posts.service';
 import { Paginator, PaginatorQuery } from '../_commons/types/types';
 import { BlogInput, BlogView } from './blog.model';
 import { BlogsService } from './blogs.service';
+import { BasicAuthGuard } from '../_commons/guards/basic.auth.guard';
 
 
 @Controller('blogs')
@@ -20,6 +21,7 @@ export class BlogsController {
         return this.blogsService.readAllWithPaginator(queries)
     }
     @Post()
+    @UseGuards(BasicAuthGuard)
     addOneBlog(@Body() blog: BlogInput): Promise<BlogView> {
         return this.blogsService.addOne(blog)
     }
@@ -31,6 +33,7 @@ export class BlogsController {
         return this.postsService.readAllByBlog(blogId, queries)
     }
     @Post(":blogId/posts")
+    @UseGuards(BasicAuthGuard)
     addPostToBlog(
         @Param('blogId') blogId: string,
         @Body() post: PostInput) {
@@ -41,13 +44,17 @@ export class BlogsController {
         @Param('id') blogId: string) {
         return this.blogsService.readOne(blogId)
     }
-    @Put(":id") @HttpCode(204)
+    @Put(":id")
+    @UseGuards(BasicAuthGuard)
+    @HttpCode(204)
     updateOneBlog(
         @Param('id') blogId: string,
         @Body() blogUpdates: BlogInput) {
         return this.blogsService.updateOne(blogId, blogUpdates)
     }
-    @Delete(":id") @HttpCode(204)
+    @Delete(":id")
+    @UseGuards(BasicAuthGuard)
+    @HttpCode(204)
     deleteOneBlog(@Param('id') blogId: string) {
         return this.blogsService.deleteOne(blogId)
     }

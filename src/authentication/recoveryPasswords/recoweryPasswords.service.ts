@@ -1,7 +1,6 @@
 import { HttpException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { User, UserBdDocument, UserView } from "src/authentication/users/user.model";
 import { CryptoService } from "../../_commons/services/crypto-service";
 import { EmailService } from "../../_commons/services/email-service";
 import { HTTP_STATUSES } from "../../_commons/types/types";
