@@ -8,12 +8,12 @@
     "method": "POST",
     "sortNum": 10000,
     "created": "2022-12-12T12:08:17.886Z",
-    "modified": "2023-01-28T11:25:24.108Z",
+    "modified": "2023-01-29T10:21:47.730Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"login\":\"string5\",\n  \"password\": \"string\",\n  \"email\": \"753464@gmail.com\"\n}",
+      "raw": "{\n  \"login\":\"login3\",\n  \"password\": \"password3\",\n  \"email\": \"7534640@gmail.com\"\n}",
       "form": []
     },
     "auth": {
@@ -375,19 +375,18 @@
     "colId": "5e656748-41de-43af-b406-852aa9ecc1dc",
     "containerId": "",
     "name": "confirm email code",
-    "url": "https://localhost:9002/auth/registration-confirmation?code=aeb4ba83",
-    "method": "GET",
+    "url": "https://localhost:9002/auth/registration-confirmation",
+    "method": "POST",
     "sortNum": 20000,
     "created": "2023-01-14T18:04:14.573Z",
-    "modified": "2023-01-14T18:27:28.244Z",
+    "modified": "2023-01-29T09:35:08.296Z",
     "headers": [],
-    "params": [
-      {
-        "name": "code",
-        "value": "aeb4ba83",
-        "isPath": false
-      }
-    ],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"code\": \"521822a0-df26-4eb4-b1ce-16b26fde08d0\"\n}",
+      "form": []
+    },
     "tests": []
   },
   {
@@ -475,7 +474,7 @@
     "method": "POST",
     "sortNum": 70000,
     "created": "2023-01-15T15:43:46.587Z",
-    "modified": "2023-01-15T20:03:05.781Z",
+    "modified": "2023-01-29T09:13:07.967Z",
     "headers": [
       {
         "name": "Cookie",
@@ -485,7 +484,7 @@
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"accessToken\": \"string\"\n}",
+      "raw": "{\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Q2Mzc1NDQ1N2QxYWY1MDBkZGNkNDciLCJpYXQiOjE2NzQ5ODM1NTUsImV4cCI6MTY3NDk4MzU2NX0.PBz7herU3tJup0Pa6EfzTPjP4THrj0ndAoQS4N5XyUc\"\n}",
       "form": []
     },
     "tests": []
@@ -518,11 +517,11 @@
     "method": "GET",
     "sortNum": 90000,
     "created": "2023-01-15T19:42:28.174Z",
-    "modified": "2023-01-15T20:20:12.122Z",
+    "modified": "2023-01-29T10:22:56.696Z",
     "headers": [
       {
         "name": "Cookie",
-        "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2M0NWJjMzhjYjdlMjE5NzQ2MGU1NTgiLCJkZXZpY2VJZCI6Ijk0YzY4NjEwLTBiN2MtNGEyMi05Zjk5LWFhNzA1ZjFmNzE0ZSIsImlhdCI6MTY3MzgxNDAwMywiZXhwIjoxNjczODE0MDIzfQ.QoFat_vcNPkLzereEPs1m1DXrSIGwrIeEtz97iC_kCQ"
+        "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Q2NDhkYjdmNDE0YWMzZjMxNWEzZjEiLCJkZXZpY2VJZCI6ImZiMGQ3MTVlLTJkNzgtNDljNy1iZTNlLTIyMDM5MmUyZTg4YyIsImlhdCI6MTY3NDk4Nzc0NSwiZXhwIjoxNjc0OTg3NzY1fQ.eb-Hq_Yiz1_oeAKUM34sn1Pvgim5uYTsg1YISIjUv3A"
       }
     ],
     "params": [],

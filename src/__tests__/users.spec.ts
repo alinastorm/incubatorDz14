@@ -1,12 +1,13 @@
 import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
 import { PostsService } from '../posts/posts.service';
 import { LikeStatus } from '../comments/like.model';
 import { MeView, UserInput, UserInputDto } from '../authentication/users/user.model';
 import { Login } from '../authentication/authentication.types';
-import { Paginator } from 'src/_commons/types/types';
+import { Paginator } from '../_commons/types/types';
+import cookieParser = require('cookie-parser');
 
 describe('POSTS', () => {
     let app: INestApplication;
@@ -39,13 +40,14 @@ describe('POSTS', () => {
 
 
     beforeAll(async () => {
-        const moduleRef = await Test.createTestingModule({
+        const moduleRef: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
         // .overrideProvider(PostsService)
         // .useValue(postsService)
 
         app = moduleRef.createNestApplication();
+        app.use(cookieParser());
         http = app.getHttpServer()
         await app.init();
     });
@@ -55,7 +57,6 @@ describe('POSTS', () => {
         return request(http).delete('/testing/all-data')
             .expect(204)
     });
-
     // test(`1/POST user`, () => {
     //     return request(http)
     //         .post('/users')
@@ -100,6 +101,7 @@ describe('POSTS', () => {
         const { status, body, headers } = await request(http).post("/auth/login")
             .send(auth)
 
+        //check access token
         accessTokenRecived = body.accessToken
         expect(body).toStrictEqual({
             "accessToken": expect.any(String)
@@ -115,12 +117,15 @@ describe('POSTS', () => {
     test(`Auth send access token in cookies`, async () => {
         const res = await request(http)
             .get("/auth/me")
-            .auth(accessTokenRecived, { type: 'bearer' })
-            // .auth(accessTokenRecived, { type: 'bearer' })
+            .set('Cookie', `refreshToken=${refreshTokenRecived}`)
+        // .auth(accessTokenRecived, { type: 'bearer' })
         expect(res.body).toMatchObject(meSchema)
-
     })
-
+    xtest('Проверить resend email')
+    xtest('Проверить pass recowery')
+    xtest('Проверить регистрацию с приходом email')
+    xtest('Проверить refresh token')
+    xtest('Проверить logout')
 
     //********************************************************************* */
     afterAll(async () => {

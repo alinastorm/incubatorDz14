@@ -4,9 +4,9 @@ import { UsersService } from './users.service';
 import { Cookies } from '../../_commons/decorators/cookies.decorator';
 import { AuthService } from '../auths/auths.service';
 import { BasicAuthGuard } from '../../_commons/guards/basic.auth.guard';
-import { LoggerMiddleware } from 'src/_commons/decorators/logger.decorator';
-import { LoggingInterceptor } from 'src/_commons/interceptors/Logger.interceptor';
-import { LoggingTimeReqResInterceptor } from 'src/_commons/interceptors/timer.interceptor';
+import { LoggerMiddleware } from '../../_commons/decorators/logger.decorator';
+import { LoggingInterceptor } from '../../_commons/interceptors/Logger.interceptor';
+import { LoggingTimeReqResInterceptor } from '../../_commons/interceptors/timer.interceptor';
 
 
 //TODO

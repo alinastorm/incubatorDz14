@@ -17,7 +17,7 @@ export class RefreshTokenGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req: Request & { refreshToken: { lastActiveDate: string } & RefreshTokenPayload } = context.switchToHttp().getRequest();
-    const refreshToken = req.cookies['refreshToken'];
+    const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) throw new UnauthorizedException('No refreshToken in cookies');
 
     const user: RefreshTokenPayload = this.jwtTokenService.getDataByRefreshToken(refreshToken)
